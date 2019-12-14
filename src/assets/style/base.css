@@ -1,0 +1,62 @@
+
+body,
+div,
+span,
+p,
+a,
+img,
+input,
+ul,
+li,
+strong,
+em,
+del,
+ins,
+i,
+h1,
+h2,
+h3,
+h4 {
+    margin: 0;
+    padding: 0;
+}
+html,body{
+    /* 添加高度 */
+    height: 100%;
+}
+a {
+    text-decoration: none;
+    color: #000;
+}
+li {
+    list-style: none;
+}
+input {
+    border:none;
+    outline:none;
+}
+img {
+    border:none;
+    vertical-align: middle;
+}
+i {
+    font-style: normal;
+}
+body {
+    font-size: 12px;
+    line-height: 1;
+}
+.clearfix::after {
+    content:".";
+    display:block;
+    clear:both;
+    height: 0;
+    visibility: hidden;
+}
+.clearfix {
+    *zoom: 1;
+}
+.w {
+    width: 1200px;
+    margin: 0 auto;
+}

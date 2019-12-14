@@ -1,0 +1,38 @@
+试题请求数据格式
+-----------------------------------------------------------------------
+{
+	"title": "清持切需想信处说工具问长西把教内切",
+"subject_id":1,
+"catalog_id":1,
+"company_id":1,
+"direction_id":1,
+"province":"湖北",
+"city":"武汉",
+"question_type":1,
+"difficulty":1,
+"tag": "究论立",
+"video": "https://www.w3school.com.cn/i/movie.ogg",
+"answer": "C",
+"options": [
+  {
+    "label": "A",
+    "text": "场且接族分到结去群格指则其你与即主如究改要动受界",
+    "image": "http://dummyimage.com/200x100/f279dd/79f2e4&text=Scott Brown"
+  },
+  {
+    "label": "B",
+    "text": "民品话目命物酸书同报查们教写复转确角生说图走性",
+    "image": "http://dummyimage.com/200x100/f2c079/9d79f2&text=Mark Perez"
+  },
+  {
+    "label": "C",
+    "text": "光系安书热增角实学保样装按关调打织如过候红",
+    "image": "http://dummyimage.com/200x100/79f27a/f2799b&text=Melissa Clark"
+  },
+  {
+    "label": "D",
+    "text": "共全几后林观可百干根内劳办导战通克报你华道己两观生论",
+    "image": "http://dummyimage.com/200x100/79bef2/e2f279&text=Daniel Williams"
+  }
+]
+}
