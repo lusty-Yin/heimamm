@@ -61,11 +61,12 @@
           <el-button type="primary" class="zhuce" @click="dialogFormVisible = true">注册</el-button>
           <!-- 注册表单 -->
           <el-dialog title="用户注册" class="zc_title" :visible.sync="dialogFormVisible">
-            <el-form :model="regForm" :rules="registerRules">
-              <el-form-item label="昵称" required :label-width="formLabelWidth">
+            <el-form :model="regForm" :rules="registerRules" ref="regForm">
+              <el-form-item label="头像" required :label-width="formLabelWidth">
                 <el-upload
                   class="avatar-uploader"
-                  action="http://127.0.0.1/heimamm/public/uploads"
+                  :action="uploadUrl"
+                  name="image"
                   :show-file-list="false"
                   :on-success="handleAvatarSuccess"
                   :before-upload="beforeAvatarUpload"
@@ -101,13 +102,13 @@
                   <el-input v-model="regForm.captcha" autocomplete="off"></el-input>
                 </el-col>
                 <el-col :span="7" :offset="1">
-                  <el-button @click="getRegCaptcha">获取用户验证码</el-button>
+                  <el-button @click="getRegCaptcha" :disabled="time != 0">{{time == 0? "获取短信验证码" : `还有(${time})s重新发送`}}</el-button>
                 </el-col>
               </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
               <el-button @click="dialogFormVisible = false">取 消</el-button>
-              <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+              <el-button type="primary" @click="submitRegForm">确 定</el-button>
             </div>
           </el-dialog>
         </el-form-item>
@@ -122,7 +123,8 @@
 </template>
 
 <script>
-import axios from "axios";
+// import axios from "axios";
+import { login, sendsms, register } from "../../api/login.js";
 export default {
   data() {
     // 手机判断
@@ -174,10 +176,14 @@ export default {
         password:'',
         phone:'',
         code:'',
-        captcha:''
+        captcha:'',
+        
       },
       yzmUrl: process.env.VUE_APP_BASEURL + "/captcha?type=login",
       regCaptchaUrl:process.env.VUE_APP_BASEURL + "/captcha?type=sendsms",
+      uploadUrl: process.env.VUE_APP_BASEURL + "/uploads",
+      time:0,
+      
       rules: {
         // message 提示信息
         // trigger：触发方式  blur（失焦） change(改变)
@@ -270,7 +276,7 @@ export default {
         // 图形码
         code: [
           {
-            required: true,
+            
             message: "图形码不能为空",
             trigger: "blur"
           },
@@ -283,16 +289,17 @@ export default {
         ]
       },
       // 注册表单
-      dialogTableVisible: false,
+      
       dialogFormVisible: false,
       zc_form: {
         
       },
       imageUrl:'',
-      formLabelWidth: "120px"
+      formLabelWidth: "140px"
     };
   },
   methods: {
+    // 登录
     submitForm() {
       // 是否勾选
       if (this.form.checked === false) {
@@ -303,16 +310,21 @@ export default {
           if (valid) {
             // 验证成功
             // this.$message.success("恭喜你，成功啦");
-            axios({
-              url: process.env.VUE_APP_BASEURL + "/login",
-              method: "post",
-              withCredentials: true,
-              data: {
+            // axios({
+            //   url: process.env.VUE_APP_BASEURL + "/login",
+            //   method: "post",
+            //   withCredentials: true,
+            //   data: {
+            //     phone: this.form.phone,
+            //     password: this.form.password,
+            //     code: this.form.captcha
+            //   }
+            // })
+            login({
                 phone: this.form.phone,
                 password: this.form.password,
                 code: this.form.captcha
-              }
-            }).then(res => {
+              }).then(res => {
               window.console.log(res);
             });
           } else {
@@ -324,14 +336,17 @@ export default {
         });
       }
     },
+    // 刷新登录验证码
     yzm() {
       this.yzmUrl =
         process.env.VUE_APP_BASEURL + "/captcha?type=login&_t=" + Date.now();
     },
+    // 刷新注册图形码
     changeCode(){
       this.regCaptchaUrl =
         process.env.VUE_APP_BASEURL + "/captcha?type=sendsms&_t=" + Date.now();
     },
+    // 获取短信验证码
     getRegCaptcha(){
       // 手机正则判断
        const reg = /^(0|86|17951)?(13[0-9]|15[012356789]|166|17[3678]|18[0-9]|14[57])[0-9]{8}$/;
@@ -342,21 +357,79 @@ export default {
         return this.$message.error('图形码不正确')
       }
 
-      axios({
-        url:process.env.VUE_APP_BASEURL + '/sendsms',
-        method:'post',
-        withCredentials: true,
-        data:{
+      // axios({
+      //   url:process.env.VUE_APP_BASEURL + '/sendsms',
+      //   method:'post',
+      //   withCredentials: true,
+      //   data:{
+      //     code:this.regForm.code,
+      //     phone:this.regForm.phone
+      //   }
+      // })
+      sendsms({
           code:this.regForm.code,
           phone:this.regForm.phone
-        }
       }).then(res=>{
+         this.time = 60;
+        const changeRegCaptcha = setInterval(() => {
+            this.time--;
+            if(this.time ==0){
+             clearInterval(changeRegCaptcha);
+             this.changeCode();
+            }
+        }, 100);
+       
         window.console.log(res);
         this.$message.success("短信验证码是:" +res.data.data.captcha)
       })
+      //  // 刷新图形码
+      //   this.regCaptchaUrl = process.env.VUE_APP_BASEURL + "/captcha?type=sendsms&_t=" + Date.now();
     },
+    // 注册
+    submitRegForm(){
+      this.$refs.regForm.validate(valid => {
+        if (valid) {
+            // 验证成功
+            // this.$message.success("恭喜你，成功啦");
+            this.$message.success('恭喜你,注册成功!')
+             this.dialogFormVisible = false
+            // axios({
+            //   url: process.env.VUE_APP_BASEURL + "/register",
+            //   method: "post",
+            //   withCredentials: true,
+            //   data: {
+            //     username:this.regForm.userName,
+            //     phone:this.regForm.phone,
+            //     email:this.regForm.email,
+            //     avatar:this.regForm.avatar,
+            //     password:this.regForm.password,
+            //     rcode:this.regForm.captcha
+            //   }
+            // })
+            register({
+                username:this.regForm.userName,
+                phone:this.regForm.phone,
+                email:this.regForm.email,
+                avatar:this.regForm.avatar,
+                password:this.regForm.password,
+                rcode:this.regForm.captcha
+            }).then(res => {
+              window.console.log(res);
+              window.console.log(this.regForm.userName)
+            });
+          } else {
+            // 验证失败
+            this.$message.error("很遗憾，内容没有写对！");
+
+            return false;
+          }
+     
+      })   
+      },
     // 文件上传
      handleAvatarSuccess(res, file) {
+       window.console.log(res.data.file_path);
+       this.regForm.avatar = res.data.file_path
         this.imageUrl = URL.createObjectURL(file.raw);
       },
       beforeAvatarUpload(file) {
