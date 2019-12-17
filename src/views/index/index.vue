@@ -9,9 +9,9 @@
      </div>
      <div class="title_right">
          <div class="user_img_box">
-             <img src="../../assets/img/index_img.png" alt="" class="user_img">
+             <img :src="userInfo.avatar" alt="" class="user_img">
          </div>
-         <span class="user_name">李达,您好</span>
+         <span class="user_name">{{userInfo.username}},您好</span>
          <el-button type="success" size="small" class="exit_btn">退出</el-button>
      </div>
       
@@ -55,15 +55,41 @@
 
 <script>
 // import {chart,enterprise,question,subject,user} from '../../router/router'
+// 导入token封装
+import {getToken} from '../../utils/token.js';
+// 导入user接口
+import {userInfo} from '../../api/user.js';
 export default {
     name:'index',
     data() {
         return {
-            isCollapse: true
+            isCollapse: true,
+            userInfo:''
         }
     },
+    beforeCreate() {
+       
+        // 判断一:有无token
+        if(!getToken()){
+            this.$message.error('要先登录喔');
+            this.$router.push('/login');
+        }
+        // 判断二:token是否正确
+        // if(getToken() === localStorage.getItem('token')){
+        //     this.$message.success('欢迎回来!')
+        // }
+        // else{
+        //     this.$message.error('要先登录喔');
+        //     this.$router.push('/login');
+        // }
+    },
     created(){
-         window.console.log(this.$route)
+          window.console.log(this.$route)
+          userInfo().then(res=>{
+            //   window.console.log(res);
+            res.data.data.avatar = process.env.VUE_APP_BASEURL + '/' + res.data.data.avatar;
+              this.userInfo = res.data.data
+          });
     },
     methods:{
        Collapse(){

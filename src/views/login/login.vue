@@ -124,7 +124,10 @@
 
 <script>
 // import axios from "axios";
+// 导入login接口请求封装
 import { login, sendsms, register } from "../../api/login.js";
+// 导入token封装
+import {setToken} from '../../utils/token.js'
 export default {
   data() {
     // 手机判断
@@ -291,9 +294,6 @@ export default {
       // 注册表单
       
       dialogFormVisible: false,
-      zc_form: {
-        
-      },
       imageUrl:'',
       formLabelWidth: "140px"
     };
@@ -326,6 +326,9 @@ export default {
                 code: this.form.captcha
               }).then(res => {
               window.console.log(res);
+                // 调用获取token函数
+                setToken(res.data.data.token);
+                this.$router.push('/index');
             });
           } else {
             // 验证失败
