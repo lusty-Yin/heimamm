@@ -1,6 +1,6 @@
 // 导入axios
 import axios from "axios"
-import { EXDEV } from "constants";
+
 
 
 // 统一设置 axios的设置
