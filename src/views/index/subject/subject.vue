@@ -34,42 +34,42 @@
       <el-table-column
         prop="num"
         label="序号"
-        width="50">
+        width="80">
       </el-table-column>
       <el-table-column
         prop="sub_id"
         label="学科编号"
-        width="180">
+       >
       </el-table-column>
       <el-table-column
         prop="sub_name"
         label="学科名称"
-        width="160">
+        >
       </el-table-column>
       <el-table-column
         prop="abbreviation"
         label="简称"
-        width="160">
+        >
       </el-table-column>
       <el-table-column
         prop="creator"
         label="创建者"
-        width="160">
+        >
       </el-table-column>
       <el-table-column
         prop="date"
         label="创建日期"
-        width="160">
+        >
       </el-table-column>
       <el-table-column
         prop="state"
         label="状态"
-        width="160">
+        >
       </el-table-column>
       <el-table-column  label="操作">
-        <el-link type="primary" >编辑</el-link>
-        <el-link type="primary">禁用</el-link>
-        <el-link type="primary">删除</el-link>
+       <el-button type="text">编辑</el-button>
+       <el-button type="text">禁用</el-button>
+       <el-button type="text">删除</el-button>
       </el-table-column>
     </el-table>
 
@@ -108,37 +108,6 @@ export default {
             creator:'刘洋洋',
             date:'2019-11-21',
             state:'启用',
-           
-          },
-          {
-            num:'1',
-            sub_id:'QD001',
-            sub_name:'前端与移动开发',
-            abbreviation:'前端',
-            creator:'刘洋洋',
-            date:'2019-11-21',
-            state:'启用',
-            
-          },
-          {
-            num:'1',
-            sub_id:'QD001',
-            sub_name:'前端与移动开发',
-            abbreviation:'前端',
-            creator:'刘洋洋',
-            date:'2019-11-21',
-            state:'启用',
-            
-          },
-          {
-            num:'1',
-            sub_id:'QD001',
-            sub_name:'前端与移动开发',
-            abbreviation:'前端',
-            creator:'刘洋洋',
-            date:'2019-11-21',
-            state:'启用',
-           
           },
       ],
       currentPage4: 1
