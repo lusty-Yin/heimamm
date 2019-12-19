@@ -326,9 +326,13 @@ export default {
                 code: this.form.captcha
               }).then(res => {
               window.console.log(res);
-                // 调用获取token函数
+               if(res.data.code == 200){
+                  // 调用获取token函数
                 setToken(res.data.data.token);
                 this.$router.push('/index');
+               }else{
+                 this.$message.error('账号或密码错误')
+               }
             });
           } else {
             // 验证失败

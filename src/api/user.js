@@ -14,9 +14,19 @@ const instance = axios.create({
 }) 
 
 
-export function userInfo(){
+export function getUserInfo(){
     return instance({
         url:'/info',
+        method:'get',
+        headers:{
+            token:getToken()
+        }
+    })
+}
+
+export function logout(){
+    return instance({
+        url:'/logout',
         method:'get',
         headers:{
             token:getToken()
